@@ -15,7 +15,7 @@ class User < ApplicationRecord
   # has_many :relationshipsとしたいが、上記定義済みのため、:reverses_of_relationshipと命名。クラスはRelationshipのため、
   # やっていることはrelationshipsと同一。
   has_many :reverses_of_relationship, class_name: 'Relationship', foreign_key: 'follow_id'
-  has_many :followers, through: :reverses_of_relationship, source: :userend
+  has_many :followers, through: :reverses_of_relationship, source: :user
 
 
   def follow(other_user)
@@ -35,6 +35,7 @@ class User < ApplicationRecord
   end
   
   def feed_microposts
+    # + [self.id]は自信を配列にして追加している。
     Micropost.where(user_id: self.following_ids + [self.id])
   end
 end
