@@ -31,11 +31,31 @@ class User < ApplicationRecord
   end
   
   def following?(other_user)
+    # micropostに値の有無をboolean型で返す
     self.followings.include?(other_user)
   end
   
   def feed_microposts
     # + [self.id]は自信を配列にして追加している。
     Micropost.where(user_id: self.following_ids + [self.id])
+  end
+  
+  has_many :favorites
+  has_many :likes, through: :favorites, source: :micropost
+  
+  def like(micropost)
+    # find_or_create_byはモデルのレコード内にデータを探しなければcreateするメソッド
+      self.favorites.find_or_create_by(micropost_id: micropost.id)
+  end
+
+  def unlike(micropost)
+    favorite = self.favorites.find_by(micropost_id: micropost.id)
+    # favoriteカラムがあればif文の前を実行する
+    favorite.destroy if favorite
+  end
+  
+  def likes?(micropost)
+    # micropostに値の有無をboolean型で返す
+    self.likes.include?(micropost)
   end
 end

@@ -1,0 +1,6 @@
+<h1>Likes <span class="badge"><%= @count_likes %></span></h1>
+<% if @microposts.present? %>
+  <%= render 'microposts/microposts', microposts: @microposts %>
+<% else %>
+　 <p><%= link_to 'お気に入りがありません。お気に入りを登録しよう！', root_url %></p>
+<% end %>
